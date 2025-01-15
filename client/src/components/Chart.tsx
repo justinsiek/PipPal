@@ -20,46 +20,37 @@ interface ChartProps {
 
 const Chart = (props: ChartProps) => {
   const { data, width: chart_width, height: chart_height } = props;
+  const margin = { top: 20, right: 30, bottom: 30, left: 60 };
+  const width = chart_width - margin.left - margin.right;
+  const height = chart_height - margin.top - margin.bottom;
 
   // find the high and low bounds of all the bars being displayed
   const dollar_high = (d3.max<number>(data.map((bar: BarData) => bar.high)) || 0) * 1.05;
   const dollar_low = (d3.min<number>(data.map((bar: BarData) => bar.low)) || 0) * 0.95;
 
   const chart_dims = {
-    pixel_width: chart_width,
-    pixel_height: chart_height,
+    pixel_width: width,
+    pixel_height: height,
     dollar_high,
     dollar_low,
     dollar_delta: dollar_high - dollar_low
   };
 
-  const dollarAt = (pixel: number) => {
-    const dollar =
-      (Math.abs(pixel - chart_dims.pixel_height) / chart_dims.pixel_height) *
-        chart_dims.dollar_delta +
-      chart_dims.dollar_low;
+  // Create scales
+  const xScale = d3.scaleLinear()
+    .domain([0, data.length - 1])
+    .range([0, width]);
 
-    return pixel > 0 ? dollar.toFixed(2) : "-";
-  };
+  const yScale = d3.scaleLinear()
+    .domain([dollar_low, dollar_high])
+    .range([height, 0]);
 
   const pixelFor = (dollar: number) => {
-    return Math.abs(
-      ((dollar - chart_dims["dollar_low"]) / chart_dims["dollar_delta"]) *
-        chart_dims["pixel_height"] -
-        chart_dims["pixel_height"]
-    );
+    return margin.top + yScale(dollar);
   };
 
   // calculate the candle width
-  const candle_width = Math.floor((chart_width / data.length) * 0.7);
-
-  // Calculate coordinates for the connecting line
-  const firstCandle = data[0];
-  const lastCandle = data[data.length - 1];
-  const firstX = (chart_width / (data.length + 1));
-  const lastX = (chart_width / (data.length + 1)) * data.length;
-  const firstY = pixelFor(firstCandle.close);
-  const lastY = pixelFor(lastCandle.close);
+  const candle_width = Math.floor((width / data.length) * 0.7);
 
   return (
     <svg
@@ -67,27 +58,60 @@ const Chart = (props: ChartProps) => {
       height={chart_height}
       className="bg-[#121212] text-white"
     >
-      {/* Add connecting line */}
-      <line
-        x1={firstX}
-        y1={firstY}
-        x2={lastX}
-        y2={lastY}
-        className="stroke-[#FFFFFF] stroke-[1]"
-      />
-      
-      {data.map((bar, i) => {
-        const candle_x = (chart_width / (data.length + 1)) * (i + 1);
-        return (
-          <Candle
-            key={i}
-            data={bar}
-            x={candle_x}
-            candle_width={candle_width}
-            pixelFor={pixelFor}
-          />
-        );
-      })}
+      <g transform={`translate(${margin.left},0)`}>
+        {/* Y Axis */}
+        {yScale.ticks(10).map((tick) => (
+          <g key={tick} transform={`translate(0,${pixelFor(tick)})`}>
+            <line
+              x1={-6}
+              x2={width}
+              stroke="#333"
+              strokeWidth={0.5}
+            />
+            <text
+              x={-10}
+              y={4}
+              textAnchor="end"
+              className="text-xs fill-gray-400"
+            >
+              {tick.toFixed(2)}
+            </text>
+          </g>
+        ))}
+
+        {/* X Axis */}
+        {xScale.ticks(10).map((tick) => (
+          <g key={tick} transform={`translate(${xScale(tick)},${height + margin.top})`}>
+            <line
+              y1={0}
+              y2={6}
+              stroke="#333"
+              strokeWidth={0.5}
+            />
+            <text
+              y={20}
+              textAnchor="middle"
+              className="text-xs fill-gray-400"
+            >
+              {tick}
+            </text>
+          </g>
+        ))}
+
+        {/* Candles */}
+        {data.map((bar, i) => {
+          const candle_x = (width / (data.length + 1)) * (i + 1);
+          return (
+            <Candle
+              key={i}
+              data={bar}
+              x={candle_x}
+              candle_width={candle_width}
+              pixelFor={pixelFor}
+            />
+          );
+        })}
+      </g>
     </svg>
   );
 };
