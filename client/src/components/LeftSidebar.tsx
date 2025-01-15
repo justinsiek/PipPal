@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { Search, X } from 'lucide-react'
 
 const allPatterns = [
@@ -39,7 +38,7 @@ export default function LeftSidebar({
 
   return (
     <div className="h-full bg-[#121212] rounded-3xl p-6 overflow-hidden flex flex-col">
-      <h2 className="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+      <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
         PipPal
       </h2>
       <form onSubmit={handleSearch} className="mb-6">
@@ -58,15 +57,14 @@ export default function LeftSidebar({
         <h3 className="text-lg font-semibold mb-2 text-gray-300">Tracked Stocks</h3>
         <div className="space-y-2">
           {trackedStocks.map((stock) => (
-            <motion.div
+            <div
               key={stock}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center justify-between bg-[#1e1e1e] rounded-lg p-2"
+              className="flex items-center justify-between bg-[#1e1e1e] rounded-lg p-2 text-white hover:bg-purple-500 hover:opacity-75 cursor-pointer"
+              onClick={() => onSelectStock(stock)}
             >
               <button
-                onClick={() => onSelectStock(stock)}
-                className="text-cyan-300 hover:text-cyan-100 transition-colors duration-200"
+                
+                className="transition-colors duration-200"
               >
                 {stock}
               </button>
@@ -76,7 +74,7 @@ export default function LeftSidebar({
               >
                 <X size={18} />
               </button>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
@@ -85,14 +83,28 @@ export default function LeftSidebar({
         <div className="space-y-2">
           {allPatterns.map((pattern) => (
             <div key={pattern} className="flex items-center">
-              <input
-                type="checkbox"
-                id={pattern}
-                checked={trackedPatterns.includes(pattern)}
-                onChange={() => onTogglePattern(pattern)}
-                className="mr-2 form-checkbox h-4 w-4 text-purple-600 transition duration-150 ease-in-out"
-              />
-              <label htmlFor={pattern} className="text-gray-300 hover:text-white cursor-pointer">
+              <div className="relative flex items-center">
+                <input
+                  type="checkbox"
+                  id={pattern}
+                  checked={trackedPatterns.includes(pattern)}
+                  onChange={() => onTogglePattern(pattern)}
+                  className="peer h-4 w-4 appearance-none rounded-sm border border-purple-500 bg-[#1e1e1e] checked:border-purple-500 checked:bg-purple-500 hover:cursor-pointer opacity-75"
+                />
+                <svg
+                  className="pointer-events-none absolute h-4 w-4 hidden peer-checked:block"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <label htmlFor={pattern} className="ml-2 text-gray-300 hover:text-white cursor-pointer">
                 {pattern}
               </label>
             </div>

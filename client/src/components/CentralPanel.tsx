@@ -34,14 +34,19 @@ export default function CentralDisplay({ stockSymbol }: { stockSymbol: string })
         {stockSymbol}
       </h2>
       <div className="flex-grow flex flex-col">
-        <div className="h-1/2 w-full bg-red-500 mb-4">
+        <div className="h-1/2 w-full mb-4">
           <CandlestickChart />
         </div>
-        <div className="h-1/2 grid grid-cols-2 gap-4">
+        <div className="h-1/2 grid grid-cols-3 gap-4">
           <StockInfoCard title="Market Cap" value="$2.53T" change="+1.2%" />
           <StockInfoCard title="P/E Ratio" value="28.92" change="-0.5%" />
+          <StockInfoCard title="EPS (TTM)" value="6.42" change="+12.3%" />
+          <StockInfoCard title="Volume" value="52.3M" change="+23.4%" />
           <StockInfoCard title="Dividend Yield" value="0.53%" change="+0.1%" />
+          <StockInfoCard title="Beta" value="1.12" />
           <StockInfoCard title="52 Week Range" value="$124.17 - $198.23" />
+          <StockInfoCard title="Avg Volume" value="78.5M" />
+          <StockInfoCard title="Price/Book" value="15.23" change="-0.8%" />
         </div>
       </div>
     </div>
