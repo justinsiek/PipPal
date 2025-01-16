@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import yfinance as yf
-from datetime import datetime, timedelta
 
 app = Flask(__name__)
 CORS(app)

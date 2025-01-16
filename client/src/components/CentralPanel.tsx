@@ -24,15 +24,15 @@ export default function CentralDisplay({ stockSymbol }: { stockSymbol: string })
           <CandlestickChart ticker={stockSymbol} />
         </div>
         <div className="h-1/2 grid grid-cols-3 gap-4">
-          <StockInfoCard title="Market Cap" value="$2.53T" change="+1.2%" />
-          <StockInfoCard title="P/E Ratio" value="28.92" change="-0.5%" />
-          <StockInfoCard title="EPS (TTM)" value="6.42" change="+12.3%" />
+          <StockInfoCard title="RSI (14)" value="65.32" change="+2.1%" />
+          <StockInfoCard title="VWAP" value="$425.87" change="-0.14%" />
+          <StockInfoCard title="ATR" value="3.42" change="+0.8%" />
           <StockInfoCard title="Volume" value="52.3M" change="+23.4%" />
-          <StockInfoCard title="Dividend Yield" value="0.53%" change="+0.1%" />
-          <StockInfoCard title="Beta" value="1.12" />
-          <StockInfoCard title="52 Week Range" value="$124.17 - $198.23" />
-          <StockInfoCard title="Avg Volume" value="78.5M" />
-          <StockInfoCard title="Price/Book" value="15.23" change="-0.8%" />
+          <StockInfoCard title="Bid/Ask Spread" value="$0.02" />
+          <StockInfoCard title="20-Day SMA" value="$422.14" change="+0.8%" />
+          <StockInfoCard title="Day Range" value="$421.33 - $427.85" />
+          <StockInfoCard title="Level 2 Depth" value="12.5M" />
+          <StockInfoCard title="Volume/MA Ratio" value="1.23" change="+15.2%" />
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Search, X, ChevronDown } from 'lucide-react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 const allPatterns = [
   'Bullish Flag', 'Bearish Flag', 'Double Top', 'Double Bottom',
@@ -40,9 +41,18 @@ export default function LeftSidebar({
 
   return (
     <div className="h-full bg-[#121212] rounded-3xl p-6 overflow-hidden flex flex-col">
-      <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-        PipPal
-      </h2>
+      <div className="flex items-center gap-2 mb-6">
+        <Image
+          src="/logo.jpg"
+          alt="PipPal Logo"
+          width={70}
+          height={70}
+          className="rounded-md"
+        />
+        <h2 className="text-3xl font-bold text-white">
+          PipPal
+        </h2>
+      </div>
       <form onSubmit={handleSearch} className="mb-6">
         <div className="relative">
           <input
@@ -50,7 +60,7 @@ export default function LeftSidebar({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search and track stocks..."
-            className="w-full bg-[#1e1e1e] text-white rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="w-full bg-[#1e1e1e] text-white rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-gray-500"
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
         </div>
@@ -65,7 +75,7 @@ export default function LeftSidebar({
               className="group flex items-center justify-between bg-white/5 hover:bg-white/[0.07] rounded-xl p-3 border border-white/[0.05] transition-all duration-200 cursor-pointer"
             >
               <button
-                className="text-white/90 group-hover:text-purple-400 transition-colors duration-200 font-medium"
+                className="text-white/90 group-hover:text-gray-400 transition-colors duration-200 font-medium"
               >
                 {stock}
               </button>
@@ -101,7 +111,7 @@ export default function LeftSidebar({
                   checked={trackedPatterns.includes(pattern)}
                   onChange={() => onTogglePattern(pattern)}
                   className="peer h-4 w-4 appearance-none rounded-sm border 
-                    border-purple-500 bg-[#1e1e1e] checked:border-purple-500 checked:bg-purple-500 hover:cursor-pointer opacity-75"
+                    border-gray-500 bg-[#1e1e1e] checked:border-gray-500 checked:bg-gray-500 hover:cursor-pointer opacity-75"
                 />
                 <svg
                   className="pointer-events-none absolute h-4 w-4 hidden peer-checked:block"
