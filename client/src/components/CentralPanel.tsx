@@ -35,7 +35,7 @@ export default function CentralDisplay({ stockSymbol }: { stockSymbol: string })
       </h2>
       <div className="flex-grow flex flex-col">
         <div className="h-1/2 w-full mb-4">
-          <CandlestickChart />
+          <CandlestickChart ticker={stockSymbol} />
         </div>
         <div className="h-1/2 grid grid-cols-3 gap-4">
           <StockInfoCard title="Market Cap" value="$2.53T" change="+1.2%" />

@@ -41,8 +41,14 @@ const Chart = (props: ChartProps) => {
     .domain([0, data.length - 1])
     .range([0, width]);
 
+  const prices = data.flatMap(d => [d.high, d.low]);
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+  const priceRange = maxPrice - minPrice;
+  const padding = priceRange * 0.1; // change this for padding
+
   const yScale = d3.scaleLinear()
-    .domain([dollar_low, dollar_high])
+    .domain([minPrice - padding, maxPrice + padding])
     .range([height, 0]);
 
   const pixelFor = (dollar: number) => {
@@ -52,6 +58,14 @@ const Chart = (props: ChartProps) => {
   // calculate the candle width
   const candle_width = Math.floor((width / data.length) * 0.7);
 
+  // Get first and last candle positions
+  const firstCandleX = (width / (data.length + 1));
+  const lastCandleX = (width / (data.length + 1)) * data.length;
+  
+  // Get closing prices for first and last candles
+  const firstCandleClose = pixelFor(data[0].close);
+  const lastCandleClose = pixelFor(data[data.length - 1].close);
+
   return (
     <svg
       width={chart_width}
@@ -59,6 +73,17 @@ const Chart = (props: ChartProps) => {
       className="bg-[#121212] text-white"
     >
       <g transform={`translate(${margin.left},0)`}>
+        {/* Add the connecting line */}
+        <line
+          x1={firstCandleX}
+          y1={firstCandleClose}
+          x2={lastCandleX}
+          y2={lastCandleClose}
+          stroke="white"
+          strokeWidth={2}
+          strokeOpacity={1}
+        />
+
         {/* Y Axis */}
         {yScale.ticks(10).map((tick) => (
           <g key={tick} transform={`translate(0,${pixelFor(tick)})`}>

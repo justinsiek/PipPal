@@ -89,7 +89,8 @@ export default function LeftSidebar({
                   id={pattern}
                   checked={trackedPatterns.includes(pattern)}
                   onChange={() => onTogglePattern(pattern)}
-                  className="peer h-4 w-4 appearance-none rounded-sm border border-purple-500 bg-[#1e1e1e] checked:border-purple-500 checked:bg-purple-500 hover:cursor-pointer opacity-75"
+                  className="peer h-4 w-4 appearance-none rounded-sm border 
+                    border-purple-500 bg-[#1e1e1e] checked:border-purple-500 checked:bg-purple-500 hover:cursor-pointer opacity-75"
                 />
                 <svg
                   className="pointer-events-none absolute h-4 w-4 hidden peer-checked:block"
