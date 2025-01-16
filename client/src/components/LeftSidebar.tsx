@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from 'react'
-import { Search, X } from 'lucide-react'
+import { Search, X, ChevronDown } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 const allPatterns = [
   'Bullish Flag', 'Bearish Flag', 'Double Top', 'Double Bottom',
@@ -27,6 +28,7 @@ export default function LeftSidebar({
   onTogglePattern
 }: LeftSidebarProps) {
   const [searchTerm, setSearchTerm] = useState('')
+  const [isExpanded, setIsExpanded] = useState(true)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,21 +58,20 @@ export default function LeftSidebar({
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2 text-gray-300">Tracked Stocks</h3>
         <div className="space-y-2">
-          {trackedStocks.map((stock) => (
+        {trackedStocks.map((stock) => (
             <div
-              key={stock}
-              className="flex items-center justify-between bg-[#1e1e1e] rounded-lg p-2 text-white hover:bg-purple-500 hover:opacity-75 cursor-pointer"
               onClick={() => onSelectStock(stock)}
+              key={stock}
+              className="group flex items-center justify-between bg-white/5 hover:bg-white/[0.07] rounded-xl p-3 border border-white/[0.05] transition-all duration-200 cursor-pointer"
             >
               <button
-                
-                className="transition-colors duration-200"
+                className="text-white/90 group-hover:text-purple-400 transition-colors duration-200 font-medium"
               >
                 {stock}
               </button>
               <button
                 onClick={() => onUntrackStock(stock)}
-                className="text-gray-400 hover:text-red-400 transition-colors duration-200"
+                className="opacity-0 group-hover:opacity-100 text-white/40 hover:text-red-400 transition-all duration-200"
               >
                 <X size={18} />
               </button>
@@ -79,8 +80,18 @@ export default function LeftSidebar({
         </div>
       </div>
       <div className="flex-grow overflow-y-auto">
-        <h3 className="text-lg font-semibold mb-2 text-gray-300">Tracked Patterns</h3>
-        <div className="space-y-2">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center justify-between w-full text-lg font-semibold mb-2 text-gray-300 hover:text-white transition-colors duration-200"
+        >
+          <span>Tracked Patterns</span>
+          <ChevronDown className={`transform transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} size={20} />
+        </button>
+        <motion.div 
+          animate={{ height: isExpanded ? 'auto' : 0 }}
+          transition={{ duration: 0.15 }}
+          className="space-y-2 overflow-hidden"
+        >
           {allPatterns.map((pattern) => (
             <div key={pattern} className="flex items-center">
               <div className="relative flex items-center">
@@ -110,7 +121,7 @@ export default function LeftSidebar({
               </label>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   )

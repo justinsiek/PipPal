@@ -62,8 +62,8 @@ const Chart = (props: ChartProps) => {
   const firstCandleX = (width / (data.length + 1));
   const lastCandleX = (width / (data.length + 1)) * data.length;
   
-  // Get closing prices for first and last candles
-  const firstCandleClose = pixelFor(data[0].close);
+  // Get opening price for first candle and closing price for last candle
+  const firstCandleOpen = pixelFor(data[0].open);
   const lastCandleClose = pixelFor(data[data.length - 1].close);
 
   return (
@@ -76,7 +76,7 @@ const Chart = (props: ChartProps) => {
         {/* Add the connecting line */}
         <line
           x1={firstCandleX}
-          y1={firstCandleClose}
+          y1={firstCandleOpen}
           x2={lastCandleX}
           y2={lastCandleClose}
           stroke="white"
