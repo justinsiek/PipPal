@@ -1,8 +1,9 @@
 "use client"
 
 import { AlertTriangle, TrendingUp, TrendingDown, Activity } from 'lucide-react'
+import { AlertCard, type Alert } from './AlertCard'
 
-const alerts = [
+const alerts: Alert[] = [
   { type: 'Bullish Breakout', stock: 'AAPL', time: '5 min ago', icon: TrendingUp, color: 'text-green-400' },
   { type: 'RSI Overbought', stock: 'NVDA', time: '10 min ago', icon: AlertTriangle, color: 'text-orange-400' },
   { type: 'Bearish Pattern', stock: 'GOOGL', time: '15 min ago', icon: TrendingDown, color: 'text-red-400' },
@@ -26,19 +27,7 @@ export default function RightSidebar() {
       <div className="overflow-y-auto flex-1 pr-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:none]">
         <div className="space-y-4">
           {alerts.map((alert, index) => (
-            <div
-              key={index}
-              className="bg-[#1e1e1e] rounded-xl px-4 py-3 backdrop-blur-sm border border-gray-800 hover:border-gray-700 transition-colors duration-200"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className={`text-sm font-medium ${alert.color}`}>
-                  {alert.type}
-                </span>
-                <alert.icon className={`h-5 w-5 ${alert.color}`} />
-              </div>
-              <div className="text-xl font-bold mb-1 text-white">{alert.stock}</div>
-              <p className="text-sm text-gray-400">{alert.time}</p>
-            </div>
+            <AlertCard key={index} alert={alert} />
           ))}
         </div>
       </div>

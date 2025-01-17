@@ -1,33 +1,22 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import * as d3 from "d3";
 import Chart from "./Chart";
 
-// Add prop interface
 interface CandlestickChartProps {
-  ticker: string;
+  data: {
+    time: number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
+  }[];
 }
 
-const CandlestickChart = ({ ticker }: CandlestickChartProps) => {
+export default function CandlestickChart({ data }: CandlestickChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [data, setData] = useState<any[]>([]);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/candlestick-data?ticker=${ticker}`);
-        const jsonData = await response.json();
-        setData(jsonData);
-      } catch (error) {
-        console.error('Error fetching candlestick data:', error);
-      }
-    };
-
-    fetchData();
-  }, [ticker]);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -63,6 +52,4 @@ const CandlestickChart = ({ ticker }: CandlestickChartProps) => {
       </div>
     </div>
   );
-};
-
-export default CandlestickChart;
+}
