@@ -23,7 +23,7 @@ export default function TrackedPatterns({
         onClick={onToggleExpanded}
         className="flex items-center justify-between w-full text-lg font-semibold mb-2 text-gray-300 hover:text-white transition-colors duration-200"
       >
-        <span>Tracked Patterns</span>
+        <span>Indicators</span>
         <ChevronDown 
           className={`transform transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} 
           size={20} 

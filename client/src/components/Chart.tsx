@@ -12,14 +12,27 @@ interface BarData {
   volume: number;
 }
 
+interface TrendlineData {
+  slope: number;
+  intercept: number;
+}
+
 interface ChartProps {
   data: BarData[];
   width: number;
   height: number;
+  trendlines?: {
+    support: TrendlineData;
+    resistance: TrendlineData;
+  };
+  visibleTrendlines: {
+    support: boolean;
+    resistance: boolean;
+  };
 }
 
 const Chart = (props: ChartProps) => {
-  const { data, width: chart_width, height: chart_height } = props;
+  const { data, width: chart_width, height: chart_height, trendlines } = props;
   const margin = { top: 20, right: 30, bottom: 30, left: 60 };
   const width = chart_width - margin.left - margin.right;
   const height = chart_height - margin.top - margin.bottom;
@@ -66,6 +79,18 @@ const Chart = (props: ChartProps) => {
   const firstCandleOpen = pixelFor(data[0].open);
   const lastCandleClose = pixelFor(data[data.length - 1].close);
 
+  // Calculate trendline points if trendlines exist
+  const trendlinePoints = trendlines ? {
+    support: Array.from({ length: data.length }, (_, i) => ({
+      x: xScale(i),
+      y: pixelFor(trendlines.support.slope * i + trendlines.support.intercept)
+    })),
+    resistance: Array.from({ length: data.length }, (_, i) => ({
+      x: xScale(i),
+      y: pixelFor(trendlines.resistance.slope * i + trendlines.resistance.intercept)
+    }))
+  } : null;
+
   return (
     <svg
       width={chart_width}
@@ -73,17 +98,31 @@ const Chart = (props: ChartProps) => {
       className="bg-[#121212] text-white"
     >
       <g transform={`translate(${margin.left},0)`}>
-        {/* Add the connecting line */}
-        <line
-          x1={firstCandleX}
-          y1={firstCandleOpen}
-          x2={lastCandleX}
-          y2={lastCandleClose}
-          stroke="white"
-          strokeWidth={2}
-          strokeOpacity={1}
-        />
-
+        {/* Draw trendlines */}
+        {trendlinePoints && (
+          <>
+            {props.visibleTrendlines.support && (
+              <path
+                d={`M ${trendlinePoints.support[0].x} ${trendlinePoints.support[0].y} 
+                    L ${trendlinePoints.support[data.length-1].x} ${trendlinePoints.support[data.length-1].y}`}
+                stroke="white"
+                strokeWidth={2}
+                fill="none"
+                strokeDasharray="5,5"
+              />
+            )}
+            {props.visibleTrendlines.resistance && (
+              <path
+                d={`M ${trendlinePoints.resistance[0].x} ${trendlinePoints.resistance[0].y} 
+                    L ${trendlinePoints.resistance[data.length-1].x} ${trendlinePoints.resistance[data.length-1].y}`}
+                stroke="white"
+                strokeWidth={2}
+                fill="none"
+                strokeDasharray="5,5"
+              />
+            )}
+          </>
+        )}
         {/* Y Axis */}
         {yScale.ticks(10).map((tick) => (
           <g key={tick} transform={`translate(0,${pixelFor(tick)})`}>

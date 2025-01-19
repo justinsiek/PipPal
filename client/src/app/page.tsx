@@ -9,7 +9,7 @@ import RightSidebar from '../components/RightSidebar'
 export default function Home() {
   const [selectedStock, setSelectedStock] = useState('AAPL')
   const [trackedStocks, setTrackedStocks] = useState(['AAPL', 'GOOGL', 'MSFT'])
-  const [trackedPatterns, setTrackedPatterns] = useState(['Bullish Flag', 'Bearish Flag'])
+  const [trackedPatterns, setTrackedPatterns] = useState(['Support', 'Resistance', 'Bullish Flag', 'Bearish Flag'])
 
   const handleTrackStock = (stock: string) => {
     setTrackedStocks(prev => [...new Set([...prev, stock])])
@@ -45,6 +45,7 @@ export default function Home() {
           onTrackStock={handleTrackStock}
           onUntrackStock={handleUntrackStock}
           trackedStocks={trackedStocks}
+          trackedPatterns={trackedPatterns}
         />
       </div>
       <div className="w-1/5">

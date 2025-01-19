@@ -7,7 +7,7 @@ import TrackedStocksList from './sidebar/TrackedStocksList'
 import TrackedPatterns from './sidebar/TrackedPatterns'
 
 const allPatterns = [
-  'Bullish Flag', 'Bearish Flag', 'Volume Spike'
+  'Support', 'Resistance', 'Bullish Flag', 'Bearish Flag', 'Volume Spike'
 ]
 
 interface LeftSidebarProps {

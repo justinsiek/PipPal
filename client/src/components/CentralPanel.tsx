@@ -10,17 +10,33 @@ interface CentralDisplayProps {
   onTrackStock: (stock: string) => void;
   onUntrackStock: (stock: string) => void;
   trackedStocks: string[];
+  trackedPatterns: string[];
 }
 
 export default function CentralDisplay({ 
   stockSymbol, 
   onTrackStock, 
   onUntrackStock,
-  trackedStocks 
+  trackedStocks,
+  trackedPatterns
 }: CentralDisplayProps) {
   const [stockPrice, setStockPrice] = useState<number | null>(null);
   const [priceChange, setPriceChange] = useState<number>(0);
   const [candlestickData, setCandlestickData] = useState([]);
+  
+  const [trendlines, setTrendlines] = useState<{
+    support: { slope: number; intercept: number };
+    resistance: { slope: number; intercept: number };
+  } | undefined>(undefined);
+
+  const [visibleTrendlines, setVisibleTrendlines] = useState<{
+    support: boolean;
+    resistance: boolean;
+  }>(() => ({
+    support: trackedPatterns.includes('Support'),
+    resistance: trackedPatterns.includes('Resistance'),
+  }));
+
   const isTracked = trackedStocks.includes(stockSymbol);
 
   useEffect(() => {
@@ -31,6 +47,7 @@ export default function CentralDisplay({
         setStockPrice(data.currentPrice);
         setPriceChange(data.changePercent);
         setCandlestickData(data.candlestickData);
+        setTrendlines(data.trendlines);
       } catch (error) {
         console.error('Error fetching stock data:', error);
       }
@@ -41,6 +58,13 @@ export default function CentralDisplay({
     const interval = setInterval(fetchStockData, 60000);
     return () => clearInterval(interval);
   }, [stockSymbol]);
+
+  useEffect(() => {
+    setVisibleTrendlines({
+      support: trackedPatterns.includes('Support'),
+      resistance: trackedPatterns.includes('Resistance'),
+    });
+  }, [trackedPatterns]);
 
   const handleTrackClick = () => {
     if (isTracked) {
@@ -81,7 +105,11 @@ export default function CentralDisplay({
       </div>
       <div className="flex-grow flex flex-col">
         <div className="h-1/2 w-full mb-4">
-          <CandlestickChart data={candlestickData} />
+        <CandlestickChart 
+          data={candlestickData} 
+          trendlines={trendlines}
+          visibleTrendlines={visibleTrendlines}
+        />
         </div>
         <div className="h-1/2 grid grid-cols-3 gap-4">
           <StockInfoCard title="RSI (14)" value="65.32" change="+2.1%" />

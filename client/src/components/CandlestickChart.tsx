@@ -12,9 +12,23 @@ interface CandlestickChartProps {
     close: number;
     volume: number;
   }[];
+  trendlines?: {
+    support: {
+      slope: number;
+      intercept: number;
+    };
+    resistance: {
+      slope: number;
+      intercept: number;
+    };
+  };
+  visibleTrendlines: {
+    support: boolean;
+    resistance: boolean;
+  };
 }
 
-export default function CandlestickChart({ data }: CandlestickChartProps) {
+export default function CandlestickChart({ data, trendlines, visibleTrendlines }: CandlestickChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -47,6 +61,8 @@ export default function CandlestickChart({ data }: CandlestickChartProps) {
             data={data}
             width={dimensions.width}
             height={dimensions.height}
+            trendlines={trendlines}
+            visibleTrendlines={visibleTrendlines}
           />
         )}
       </div>

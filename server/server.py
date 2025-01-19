@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import yfinance as yf
+import numpy as np
+from trendlines import fit_trendlines_high_low
 
 app = Flask(__name__)
 CORS(app)
@@ -16,6 +18,12 @@ def get_stock_data():
         df = stock.history(period='1d', interval='5m')
         df = df.tail(120)
         
+        # Calculate trendlines
+        high_vals = df['High'].to_numpy()
+        low_vals = df['Low'].to_numpy()
+        close_vals = df['Close'].to_numpy()
+        support_resist = fit_trendlines_high_low(high_vals, low_vals, close_vals)
+        
         candlestick_data = []
         for index, row in df.iterrows():
             candlestick_data.append({
@@ -27,7 +35,11 @@ def get_stock_data():
                 "volume": int(row['Volume'])
             })
         
-        # Get current price and calculate change
+        # Calculate trendline points
+        x_vals = np.arange(len(candlestick_data))
+        support_line = support_resist[0][0] * x_vals + support_resist[0][1]
+        resist_line = support_resist[1][0] * x_vals + support_resist[1][1]
+        
         latest_data = stock.history(period='1d', interval='1m').iloc[-1]
         current_price = latest_data['Close']
         
@@ -37,14 +49,25 @@ def get_stock_data():
         return jsonify({
             'candlestickData': candlestick_data,
             'currentPrice': round(current_price, 2),
-            'changePercent': round(price_change, 2)
+            'changePercent': round(price_change, 2),
+            'trendlines': {
+                'support': {
+                    'slope': support_resist[0][0],
+                    'intercept': support_resist[0][1]
+                },
+                'resistance': {
+                    'slope': support_resist[1][0],
+                    'intercept': support_resist[1][1]
+                }
+            }
         })
     except Exception as e:
         print(f"Error fetching stock data: {e}")
         return jsonify({
             'candlestickData': [],
             'currentPrice': 0,
-            'changePercent': 0
+            'changePercent': 0,
+            'trendlines': None
         }), 500
 
 if __name__ == '__main__':
