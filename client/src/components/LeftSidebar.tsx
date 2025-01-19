@@ -6,10 +6,7 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 
 const allPatterns = [
-  'Bullish Flag', 'Bearish Flag', 'Double Top', 'Double Bottom',
-  'Head and Shoulders', 'Inverse Head and Shoulders', 'Triangle',
-  'Wedge', 'Cup and Handle', 'Rounding Bottom'
-]
+  'Bullish Flag', 'Bearish Flag', 'Volume Spike']
 
 interface LeftSidebarProps {
   onSelectStock: (stock: string) => void
@@ -34,7 +31,7 @@ export default function LeftSidebar({
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchTerm.trim()) {
-      onTrackStock(searchTerm.toUpperCase())
+      onSelectStock(searchTerm.toUpperCase())
       setSearchTerm('')
     }
   }
@@ -110,23 +107,39 @@ export default function LeftSidebar({
                   id={pattern}
                   checked={trackedPatterns.includes(pattern)}
                   onChange={() => onTogglePattern(pattern)}
-                  className="peer h-4 w-4 appearance-none rounded-sm border 
-                    border-gray-500 bg-[#1e1e1e] checked:border-gray-500 checked:bg-gray-500 hover:cursor-pointer opacity-75"
+                  className="peer h-5 w-5 appearance-none rounded-lg border-2
+                    border-gray-500/30 bg-[#1e1e1e] 
+                    checked:border-gray-400/30 checked:bg-white/[0.08]
+                    hover:border-gray-400/30 hover:cursor-pointer
+                    checked:hover:border-gray-300/30
+                    transition-colors duration-200"
                 />
-                <svg
-                  className="pointer-events-none absolute h-4 w-4 hidden peer-checked:block"
+                <motion.svg
+                  initial={false}
+                  animate={{ 
+                    opacity: trackedPatterns.includes(pattern) ? 1 : 0,
+                    scale: trackedPatterns.includes(pattern) ? 1 : 0.8
+                  }}
+                  transition={{ duration: 0.2 }}
+                  className="pointer-events-none absolute h-5 w-5 p-1"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="white"
+                  stroke="currentColor"
                   strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+                  <polyline 
+                    className="text-gray-300" 
+                    points="20 6 9 17 4 12"
+                  />
+                </motion.svg>
               </div>
-              <label htmlFor={pattern} className="ml-2 text-gray-300 hover:text-white cursor-pointer">
+              <label 
+                htmlFor={pattern} 
+                className="ml-3 text-gray-400 hover:text-white cursor-pointer transition-colors duration-200"
+              >
                 {pattern}
               </label>
             </div>

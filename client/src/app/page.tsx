@@ -40,7 +40,12 @@ export default function Home() {
         />
       </div>
       <div className="w-3/5">
-        <CentralDisplay stockSymbol={selectedStock} />
+        <CentralDisplay 
+          stockSymbol={selectedStock} 
+          onTrackStock={handleTrackStock}
+          onUntrackStock={handleUntrackStock}
+          trackedStocks={trackedStocks}
+        />
       </div>
       <div className="w-1/5">
         <RightSidebar />

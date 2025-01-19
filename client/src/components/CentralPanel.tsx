@@ -5,10 +5,23 @@ import CandlestickChart from './CandlestickChart'
 import { TrendingUp, TrendingDown } from 'lucide-react'
 import StockInfoCard from './StockInfoCard'
 
-export default function CentralDisplay({ stockSymbol }: { stockSymbol: string }) {
+interface CentralDisplayProps {
+  stockSymbol: string;
+  onTrackStock: (stock: string) => void;
+  onUntrackStock: (stock: string) => void;
+  trackedStocks: string[];
+}
+
+export default function CentralDisplay({ 
+  stockSymbol, 
+  onTrackStock, 
+  onUntrackStock,
+  trackedStocks 
+}: CentralDisplayProps) {
   const [stockPrice, setStockPrice] = useState<number | null>(null);
   const [priceChange, setPriceChange] = useState<number>(0);
   const [candlestickData, setCandlestickData] = useState([]);
+  const isTracked = trackedStocks.includes(stockSymbol);
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -29,11 +42,34 @@ export default function CentralDisplay({ stockSymbol }: { stockSymbol: string })
     return () => clearInterval(interval);
   }, [stockSymbol]);
 
+  const handleTrackClick = () => {
+    if (isTracked) {
+      onUntrackStock(stockSymbol);
+    } else {
+      onTrackStock(stockSymbol);
+    }
+  };
+
   return (
     <div className="h-full bg-[#121212] rounded-3xl p-6 flex flex-col">
-      <h2 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-400">
-        {stockSymbol}
-      </h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-4xl font-bold mb-2 text-white">
+          {stockSymbol}
+        </h2>
+        <button 
+          onClick={handleTrackClick}
+          className={`
+            px-4 py-2 rounded-xl font-medium
+            backdrop-blur-sm border transition-all duration-200
+            ${isTracked 
+              ? 'bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20 hover:border-red-500/30' 
+              : 'bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500/20 hover:border-green-500/30'
+            }
+          `}
+        >
+          {isTracked ? 'Untrack' : 'Track'}
+        </button>
+      </div>
       <div className="flex items-center gap-2">
         <span className="text-2xl font-semibold text-white">
           ${stockPrice?.toFixed(2) || '---'}
