@@ -46,7 +46,7 @@ export default function PatternCheckbox({ pattern, checked, onToggle }: PatternC
       </div>
       <label 
         htmlFor={pattern} 
-        className="ml-3 text-gray-400 hover:text-white cursor-pointer transition-colors duration-200"
+        className="ml-3 text-gray-400 hover:text-gray-300 cursor-pointer transition-colors duration-200"
       >
         {pattern}
       </label>
